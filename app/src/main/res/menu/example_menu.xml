@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/first_item"
+        android:title="@string/first_item"
+        android:icon="@drawable/ic_reward_coin_item_list"
+        app:showAsAction="withText"
+        android:actionLayout="@layout/activity_content"
+        android:alphabeticShortcut="@string/first_item"
+        android:menuCategory="system"
+        android:checkable="true"
+        android:checked="true"
+        />
+
+    <item
+        android:id="@+id/second_item"
+        android:title="@string/second_item"
+        android:icon="@drawable/ic_reward_coin_item_list"
+        app:showAsAction="withText"
+        android:actionLayout="@layout/activity_content"
+        android:alphabeticShortcut="@string/first_item"
+        android:checkable="false">
+        <menu>
+            <item android:id="@+id/submenu_item1"
+                android:title="@string/sub_item"
+                android:checked="true"
+                android:checkable="true"/>
+        </menu>
+    </item>
+
+
+    <group
+        android:id="@+id/first_group"
+        android:visible="true"
+        android:checkableBehavior="all">
+        <item
+            android:id="@+id/third_item"
+            android:title="@string/third_item"
+            android:icon="@drawable/ic_reward_coin_item_list"
+            app:showAsAction="withText"
+            android:actionLayout="@layout/activity_content"
+            android:alphabeticShortcut="@string/first_item"
+            android:menuCategory="system"
+            android:checkable="false"
+            android:checked="true"
+            />
+
+        <item
+            android:id="@+id/fourth_item"
+            android:title="@string/fourth_item"
+            android:icon="@drawable/ic_reward_coin_item_list"
+            app:showAsAction="withText"
+            android:actionLayout="@layout/activity_content"
+            android:alphabeticShortcut="@string/first_item"
+            android:checkable="false"
+            />
+    </group>
+
+
+</menu>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Study</string>
+    <string name="copy">COPY</string>
+    <string name="add">Add</string>
+    <string name="remove">REMOVE</string>
+    <string name="lb_title">Title: %d</string>
+    <string name="lb_description">Detail: %d</string>
+    <string name="lb_content">Content %d</string>
+</resources>
