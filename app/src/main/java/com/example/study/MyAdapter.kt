@@ -8,43 +8,58 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MyAdapter(private val myListData: ArrayList<Data>): RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+class MyAdapter(context: Context) :
+    RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+
+    private var mListData = Data.createList(context)
 
     var listener: OnItemClick? = null
 
-    inner class MyViewHolder(dataView: View): RecyclerView.ViewHolder(dataView){
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val dataView = inflater.inflate(R.layout.item, parent, false)
+        return MyViewHolder(dataView)
+    }
+
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val data = mListData[position]
+        holder.apply {
+            title.text = data.title
+            description.text = data.description
+            copyButton.isEnabled = data.isActive
+            copyButton.setOnClickListener {
+                listener?.onDetailButtonClick(data.content)
+            }
+        }
+    }
+
+    override fun getItemCount() = mListData.size
+
+    fun setOnItemClickListener(OnItemClick: OnItemClick) {
+        this.listener = OnItemClick
+    }
+
+    fun add(context: Context) {
+        mListData.add(
+            mListData.size,
+            Data(
+                context.getString(R.string.lb_title, mListData.size),
+                context.getString(R.string.lb_description, mListData.size),
+                true,
+                context.getString(R.string.lb_content, mListData.size)
+            )
+        )
+    }
+
+    fun remove() = mListData.removeAt(itemCount - 1)
+
+    inner class MyViewHolder(dataView: View) : RecyclerView.ViewHolder(dataView) {
         val title: TextView = itemView.findViewById<TextView>(R.id.title)
         val description: TextView = itemView.findViewById<TextView>(R.id.description)
         val copyButton: Button = itemView.findViewById<Button>(R.id.detailBtn)
     }
 
     interface OnItemClick {
-        fun onCopyButtonClick(position: Int)
+        fun onDetailButtonClick(content: String)
     }
-
-    fun setOnItemClickListener(OnItemClick: OnItemClick){
-        this.listener = OnItemClick
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val context = parent.context
-        val inflater = LayoutInflater.from(context)
-        val dataView = inflater.inflate(R.layout.item, parent, false)
-        return MyViewHolder(dataView)
-    }
-
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val data = myListData[position]
-        holder.title.text = data.title
-        holder.description.text = data.description
-        holder.copyButton.isEnabled = data.isActive
-//        holder.copyButton.background = x
-        holder.copyButton.setOnClickListener{
-                listener?.onCopyButtonClick(position)
-        }
-    }
-
-
-
-    override fun getItemCount() = myListData.size
 }

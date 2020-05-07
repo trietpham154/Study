@@ -1,53 +1,47 @@
 package com.example.study
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(){
-    private val myData = Data.data
-        override fun onCreate(savedInstanceState: Bundle?) {
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Data.createList(this)
 
-        val intent = Intent(this, ContentActivity::class.java)
+        val adapter = MyAdapter(this)
+        adapter.setOnItemClickListener(object : MyAdapter.OnItemClick {
+            override fun onDetailButtonClick(content: String) {
 
-        val recyclerView = findViewById<RecyclerView>(R.id.list_article)
-        val adapter = MyAdapter(myData)
-
-
-        adapter.setOnItemClickListener(object: MyAdapter.OnItemClick {
-            override fun onCopyButtonClick(position: Int) {
-                intent.putExtra("content", Data.data[position].content)
+                val intent = Intent(this@MainActivity, ContentActivity::class.java)
+                intent.putExtra("content", content)
                 startActivity(intent)
             }
-
         })
 
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        rvArticle?.adapter = adapter
+        rvArticle?.layoutManager = LinearLayoutManager(this)
 
-
-
-        addItem.setOnClickListener {
-            myData.add(myData.size,
-                        Data(this.getString(R.string.lb_title, myData.size),
-                            this.getString(R.string.lb_description,myData.size),
-                            true,
-                            this.getString(R.string.lb_content,myData.size)))
-            adapter.notifyDataSetChanged()
-            recyclerView.scrollToPosition(myData.size - 1)
+        addItem?.setOnClickListener {
+            adapter.run {
+                add(this@MainActivity)
+                notifyDataSetChanged()
+                rvArticle?.scrollToPosition(this.itemCount - 1)
+            }
         }
-        removeItem.setOnClickListener {
-            if (myData.isNotEmpty()) {
-                myData.removeAt(myData.size - 1)
-                adapter.notifyDataSetChanged()
-                recyclerView.scrollToPosition(myData.size - 1)
+        removeItem?.setOnClickListener {
+            adapter.takeIf { it.itemCount > 0 }?.run {
+                remove()
+                notifyDataSetChanged()
+                rvArticle?.scrollToPosition(this.itemCount - 1)
             }
 
+
         }
+
     }
 }
+
