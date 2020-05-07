@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
         val adapter = MyAdapter(this)
         adapter.setOnItemClickListener(object : MyAdapter.OnItemClick {
             override fun onDetailButtonClick(content: String) {
-
                 val intent = Intent(this@MainActivity, ContentActivity::class.java)
                 intent.putExtra("content", content)
                 startActivity(intent)

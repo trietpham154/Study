@@ -40,15 +40,27 @@ class MyAdapter(context: Context) :
     }
 
     fun add(context: Context) {
-        mListData.add(
-            mListData.size,
-            Data(
-                context.getString(R.string.lb_title, mListData.size),
-                context.getString(R.string.lb_description, mListData.size),
-                true,
-                context.getString(R.string.lb_content, mListData.size)
+        if (itemCount % 3 == 0) {
+            mListData.add(
+                itemCount,
+                Data(
+                    context.getString(R.string.lb_title, itemCount),
+                    context.getString(R.string.lb_description, itemCount),
+                    false,
+                    context.getString(R.string.lb_content, itemCount)
+                )
             )
-        )
+        } else {
+            mListData.add(
+                itemCount,
+                Data(
+                    context.getString(R.string.lb_title, itemCount),
+                    context.getString(R.string.lb_description, itemCount),
+                    true,
+                    context.getString(R.string.lb_content, itemCount)
+                )
+            )
+        }
     }
 
     fun remove() = mListData.removeAt(itemCount - 1)
