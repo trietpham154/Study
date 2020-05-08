@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Study</string>
+    <string name="copy">COPY</string>
+    <string name="add">Add</string>
+    <string name="remove">REMOVE</string>
+    <string name="lb_title">Title: %d</string>
+    <string name="lb_description">Detail: %d</string>
+    <string name="lb_content">Content %d</string>
+    <string name="first_item">First Item</string>
+    <string name="detail">Detail</string>
+    <string name="second_item">Second Item</string>
+    <string name="fourth_item">Fourth Item</string>
+    <string name="third_item">Third_Item</string>
+    <string name="sub_item">Sub Item</string>
+</resources>

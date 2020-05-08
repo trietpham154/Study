@@ -1,4 +1,4 @@
-package com.example.study
+package com.example.appfragment
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,10 +8,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MyAdapter(context: Context) :
+class MyAdapter(context: Context, private var mListData: ArrayList<Data>) :
     RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
-
-    private var mListData = Data.createList(context)
 
     var listener: OnItemClick? = null
 

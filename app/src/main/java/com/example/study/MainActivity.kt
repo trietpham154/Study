@@ -14,9 +14,9 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = MyAdapter(this)
         adapter.setOnItemClickListener(object : MyAdapter.OnItemClick {
-            override fun onDetailButtonClick(content: String) {
+            override fun onDetailButtonClick(data: Data) {
                 val intent = Intent(this@MainActivity, ContentActivity::class.java)
-                intent.putExtra("content", content)
+                intent.putExtra("content", data.content)
                 startActivity(intent)
             }
         })
@@ -27,14 +27,12 @@ class MainActivity : AppCompatActivity() {
         addItem?.setOnClickListener {
             adapter.run {
                 add(this@MainActivity)
-                notifyDataSetChanged()
                 rvArticle?.scrollToPosition(this.itemCount - 1)
             }
         }
         removeItem?.setOnClickListener {
             adapter.takeIf { it.itemCount > 0 }?.run {
                 remove()
-                notifyDataSetChanged()
                 rvArticle?.scrollToPosition(this.itemCount - 1)
             }
 
