@@ -12,46 +12,14 @@ import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
 
-open class ListItemFragment(context: Context, mListData: ArrayList<Data>) : Fragment() {
+open class ListItemFragment() : Fragment() {
 
     private var listener: OnClickItemListener? = null
 
-    private val thisContext = context
+    private var adapter: MyAdapter? = null
+    private lateinit var linearLayoutManager: RecyclerView.LayoutManager
 
-    private val adapter = MyAdapter(thisContext, mListData)
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_list, container, false)
-        val rv = view.findViewById<RecyclerView>(R.id.rvArticle)
-        rv.layoutManager = LinearLayoutManager(thisContext)
-        rv.adapter = adapter
-        return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        addItem.setOnClickListener {
-            adapter.run {
-                add(thisContext)
-                view.rvArticle?.scrollToPosition(this.itemCount - 1)
-            }
-        }
-        removeItem.setOnClickListener {
-            adapter.run {
-                remove()
-                view.rvArticle?.scrollToPosition(this.itemCount - 1)
-            }
-        }
-        adapter.setOnItemClickListener(object : MyAdapter.OnItemClick {
-            override fun onDetailButtonClick(data: Data) {
-                listener?.onClickDetailButton(data)
-            }
-        })
-    }
+    private var root: View? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,10 +27,95 @@ open class ListItemFragment(context: Context, mListData: ArrayList<Data>) : Frag
         if (listener == null) throw ClassCastException("$context must implement OnCopyClickedListener")
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val mListData =
+            arguments?.getParcelableArrayList<Data>(Constant.LIST_DATA_KEY) ?: ArrayList()
+        adapter = context?.let { MyAdapter(it, mListData) }
+        linearLayoutManager = LinearLayoutManager(context)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        if (root != null) return root
+
+        val view = inflater.inflate(R.layout.fragment_list, container, false)
+        view.rvArticle?.apply {
+            layoutManager = linearLayoutManager
+            adapter = this@ListItemFragment.adapter
+        }
+        root = view
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        addItem.setOnClickListener {
+            adapter?.run {
+                context?.let { context -> this.add(context) }
+                view.rvArticle?.scrollToPosition(this.itemCount - 1)
+            }
+        }
+
+        removeItem.setOnClickListener {
+            adapter?.run {
+                remove()
+                view.rvArticle?.scrollToPosition(this.itemCount - 1)
+            }
+        }
+
+        adapter?.setOnItemClickListener(object : MyAdapter.OnItemClick {
+            override fun onDetailButtonClick(data: Data) {
+                listener?.onClickDetailButton(data)
+            }
+        })
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+    }
+
+    override fun onStart() {
+        super.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+    }
 
     companion object {
-        fun newInstance(context: Context, mListData: ArrayList<Data>) =
-            ListItemFragment(context, mListData)
+        fun newInstance(mListData: ArrayList<Data>): ListItemFragment {
+            return ListItemFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelableArrayList(Constant.LIST_DATA_KEY, mListData)
+                }
+            }
+        }
     }
 
     interface OnClickItemListener {

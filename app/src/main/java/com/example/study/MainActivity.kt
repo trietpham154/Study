@@ -11,7 +11,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         val adapter = MyAdapter(this)
         adapter.setOnItemClickListener(object : MyAdapter.OnItemClick {
             override fun onDetailButtonClick(data: Data) {

@@ -1,10 +1,13 @@
 package com.example.appfragment
 
 import android.content.Context
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-class Data(val title: String, val description: String, val isActive: Boolean, val content: String) {
+@Parcelize
+class Data(val title: String, val description: String, val isActive: Boolean, val content: String) :
+    Parcelable {
     companion object {
-
         fun createList(context: Context): ArrayList<Data> {
             val data = ArrayList<Data>()
             for (x in 0..1000) {
