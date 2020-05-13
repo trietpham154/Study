@@ -28,7 +28,7 @@ class MyAdapter(context: Context) :
             description.text = data.description
             copyButton.isEnabled = data.isActive
             copyButton.setOnClickListener {
-                listener?.onDetailButtonClick(data)
+                listener?.onDetailButtonClick(data, position)
             }
         }
     }
@@ -76,6 +76,6 @@ class MyAdapter(context: Context) :
     }
 
     interface OnItemClick {
-        fun onDetailButtonClick(data: Data)
+        fun onDetailButtonClick(data: Data, index: Int)
     }
 }

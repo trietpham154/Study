@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 open class ListItemFragment() : Fragment() {
@@ -69,6 +71,14 @@ open class ListItemFragment() : Fragment() {
             }
         }
 
+//        changeLanguage?.setOnClickListener {
+//            Toast.makeText(context,
+//                (root?.rvArticle?.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+//                    .toString(),
+//                Toast.LENGTH_SHORT
+//            ).show()
+//        }
+
         adapter?.setOnItemClickListener(object : MyAdapter.OnItemClick {
             override fun onDetailButtonClick(data: Data) {
                 listener?.onClickDetailButton(data)
@@ -76,36 +86,38 @@ open class ListItemFragment() : Fragment() {
         })
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(
+            Constant.CURRENT_FIRST_POS,
+            (root?.rvArticle?.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        )
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-    }
-
-    override fun onStart() {
-        super.onStart()
+        if (savedInstanceState != null) {
+            linearLayoutManager.scrollToPosition(savedInstanceState.getInt(Constant.CURRENT_FIRST_POS))
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        changeLanguage?.setOnClickListener {
+            if (resources.configuration.locales[0].language == Constant.VN_LANGUAGE)
+                applyLanguage(Constant.EN_LANGUAGE)
+            else if (resources.configuration.locales[0].language == Constant.EN_LANGUAGE)
+                applyLanguage(Constant.VN_LANGUAGE)
+        }
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
+    private fun applyLanguage(language: String) {
+        val locale = Locale(language)
+        resources.configuration.run {
+            setLocale(locale)
+            resources.updateConfiguration(this, resources.displayMetrics)
+        }
+        listener?.configurationChange()
     }
 
     companion object {
@@ -120,6 +132,7 @@ open class ListItemFragment() : Fragment() {
 
     interface OnClickItemListener {
         fun onClickDetailButton(data: Data)
+        fun configurationChange()
     }
 
 

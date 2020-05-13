@@ -22,4 +22,8 @@ class MainActivity : FragmentActivity(), ListItemFragment.OnClickItemListener {
             .addToBackStack(null)
             .commit()
     }
+
+    override fun configurationChange() {
+        recreate()
+    }
 }

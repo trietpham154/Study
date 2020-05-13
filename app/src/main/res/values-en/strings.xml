@@ -6,4 +6,6 @@
     <string name="lb_title">Title: %d</string>
     <string name="lb_description">Detail: %d</string>
     <string name="lb_content">Content %d</string>
+    <string name="detail">Detail</string>
+    <string name="change_language">CHANGE LANGUAGE</string>
 </resources>
