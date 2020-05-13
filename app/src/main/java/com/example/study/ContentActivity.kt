@@ -18,7 +18,7 @@ class ContentActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        if (resources.configuration.locales[0].language != ConfigurationChange.getLanguage()){
+        if (resources.configuration.locales.get(0).language != ConfigurationChange.getLanguage()) {
             ConfigurationChange.applyLanguage(this)
             recreate()
         }

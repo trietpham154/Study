@@ -1,6 +1,5 @@
 package com.example.study
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        activityLanguage = resources.configuration.locales[0].language
+        activityLanguage = resources.configuration.locales.get(0).language
 
         val adapter = MyAdapter(this)
 
@@ -49,16 +48,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        if (activityLanguage != ConfigurationChange.getLanguage()){
+        if (activityLanguage != ConfigurationChange.getLanguage()) {
             ConfigurationChange.applyLanguage(this)
             activityLanguage = ConfigurationChange.getLanguage()
             recreate()
         }
         super.onResume()
-    }
-
-    override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(newBase)
     }
 
 }

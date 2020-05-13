@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 open class ListItemFragment() : Fragment() {
 
     private var listener: OnClickItemListener? = null
+
+    private var fragmentLanguage: String? = null
 
     private var adapter: MyAdapter? = null
     private lateinit var linearLayoutManager: RecyclerView.LayoutManager
@@ -31,9 +31,13 @@ open class ListItemFragment() : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        fragmentLanguage = context?.resources?.configuration?.locales?.get(0)?.language
+
         val mListData =
             arguments?.getParcelableArrayList<Data>(Constant.LIST_DATA_KEY) ?: ArrayList()
-        adapter = context?.let { MyAdapter(it, mListData) }
+
+        adapter = context?.let { MyAdapter(mListData) }
         linearLayoutManager = LinearLayoutManager(context)
     }
 
@@ -57,6 +61,10 @@ open class ListItemFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (ConfigurationChange.getCurrentPosition() > 0) {
+            linearLayoutManager.scrollToPosition(ConfigurationChange.getCurrentPosition())
+        }
+
         addItem.setOnClickListener {
             adapter?.run {
                 context?.let { context -> this.add(context) }
@@ -71,53 +79,30 @@ open class ListItemFragment() : Fragment() {
             }
         }
 
-//        changeLanguage?.setOnClickListener {
-//            Toast.makeText(context,
-//                (root?.rvArticle?.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-//                    .toString(),
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        }
+        changeLanguage?.setOnClickListener {
+            context?.run {
+                ConfigurationChange.changeLanguage(this)
+                (this as MainActivity).recreate()
+            }
+        }
 
         adapter?.setOnItemClickListener(object : MyAdapter.OnItemClick {
-            override fun onDetailButtonClick(data: Data) {
-                listener?.onClickDetailButton(data)
+            override fun onDetailButtonClick(data: Data, index: Int) {
+                listener?.onClickDetailButton(data, index)
+                ConfigurationChange.setCurrentPosition((view.rvArticle?.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition())
             }
         })
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(
-            Constant.CURRENT_FIRST_POS,
-            (root?.rvArticle?.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-        )
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        if (savedInstanceState != null) {
-            linearLayoutManager.scrollToPosition(savedInstanceState.getInt(Constant.CURRENT_FIRST_POS))
-        }
-    }
-
     override fun onResume() {
         super.onResume()
-        changeLanguage?.setOnClickListener {
-            if (resources.configuration.locales[0].language == Constant.VN_LANGUAGE)
-                applyLanguage(Constant.EN_LANGUAGE)
-            else if (resources.configuration.locales[0].language == Constant.EN_LANGUAGE)
-                applyLanguage(Constant.VN_LANGUAGE)
+        if (fragmentLanguage != ConfigurationChange.getLanguage()) {
+            context?.let { ConfigurationChange.applyLanguage(it) }
+            fragmentLanguage = ConfigurationChange.getLanguage()
+            context?.let {
+                (it as MainActivity).recreate()
+            }
         }
-    }
-
-    private fun applyLanguage(language: String) {
-        val locale = Locale(language)
-        resources.configuration.run {
-            setLocale(locale)
-            resources.updateConfiguration(this, resources.displayMetrics)
-        }
-        listener?.configurationChange()
     }
 
     companion object {
@@ -131,8 +116,7 @@ open class ListItemFragment() : Fragment() {
     }
 
     interface OnClickItemListener {
-        fun onClickDetailButton(data: Data)
-        fun configurationChange()
+        fun onClickDetailButton(data: Data, index: Int)
     }
 
 

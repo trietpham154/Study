@@ -1,9 +1,12 @@
 package com.example.appfragment
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 
 class MainActivity : FragmentActivity(), ListItemFragment.OnClickItemListener {
+
+    val fragmentManager = supportFragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,15 +18,21 @@ class MainActivity : FragmentActivity(), ListItemFragment.OnClickItemListener {
             .commit()
     }
 
-    override fun onClickDetailButton(data: Data) {
-        supportFragmentManager
+    override fun onResume() {
+        super.onResume()
+
+    }
+
+    override fun onClickDetailButton(data: Data, index: Int) {
+        fragmentManager
             .beginTransaction()
-            .replace(R.id.mainActivity, ContentFragment.newInstance(data))
+            .replace(R.id.mainActivity, ContentFragment.newInstance(data, index))
             .addToBackStack(null)
             .commit()
     }
 
-    override fun configurationChange() {
-        recreate()
+    fun replaceItself(fragment: Fragment) {
+        fragmentManager.beginTransaction().replace(R.id.mainActivity, fragment).commit()
     }
+
 }

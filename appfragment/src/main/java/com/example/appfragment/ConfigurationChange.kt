@@ -1,4 +1,4 @@
-package com.example.study
+package com.example.appfragment
 
 import android.content.Context
 import android.os.Build
@@ -7,8 +7,14 @@ import java.util.*
 class ConfigurationChange {
 
     companion object {
+        private var currentPosition: Int = 0
         private var language: String = Constant.EN_LANGUAGE
         fun getLanguage() = language
+        fun getCurrentPosition() = currentPosition
+        fun setCurrentPosition(position: Int) {
+            currentPosition = position
+        }
+
         fun applyLanguage(context: Context) {
             context.resources.configuration.run {
                 setLocale(Locale(language))

@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MyAdapter(context: Context, private var mListData: ArrayList<Data>) :
+class MyAdapter(private var mListData: ArrayList<Data>) :
     RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
     var listener: OnItemClick? = null
@@ -26,7 +26,7 @@ class MyAdapter(context: Context, private var mListData: ArrayList<Data>) :
             description.text = data.description
             copyButton.isEnabled = data.isActive
             copyButton.setOnClickListener {
-                listener?.onDetailButtonClick(data)
+                listener?.onDetailButtonClick(data, position)
             }
         }
     }
@@ -74,6 +74,6 @@ class MyAdapter(context: Context, private var mListData: ArrayList<Data>) :
     }
 
     interface OnItemClick {
-        fun onDetailButtonClick(data: Data)
+        fun onDetailButtonClick(data: Data, index: Int)
     }
 }

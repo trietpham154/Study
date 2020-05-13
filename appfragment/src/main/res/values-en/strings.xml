@@ -12,4 +12,6 @@
     <string name="fourth_item">Fourth Item</string>
     <string name="third_item">Third_Item</string>
     <string name="sub_item">Sub Item</string>
+    <string name="change_language">CHANGE LANGUAGE</string>
+
 </resources>

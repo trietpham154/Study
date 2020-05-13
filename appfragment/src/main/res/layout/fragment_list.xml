@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     android:orientation="vertical"
     tools:context=".ListItemFragment">
 
@@ -33,6 +34,7 @@
             android:layout_height="wrap_content"
             android:text="@string/remove"
             android:textColor="@color/detail_button_color_state" />
+
         <Button
             android:id="@+id/changeLanguage"
             android:layout_width="wrap_content"
