@@ -1,3 +1,4 @@
 rootProject.name='Study'
 include ':app'
 include ':appfragment'
+include ':intentexample'
